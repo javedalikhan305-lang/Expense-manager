@@ -7,7 +7,11 @@
     "server"
   ],
   "scripts": {
+    "dev": "concurrently \"npm --prefix client run dev\" \"npm --prefix server run dev\"",
     "build": "cd client && npm run build",
     "start": "cd server && npm run start"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }
