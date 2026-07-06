@@ -66,33 +66,35 @@ const TransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8">
-      <div className="w-full max-w-lg overflow-hidden rounded-[2rem] border border-fintech-border bg-[#081722] shadow-soft">
-        <div className="flex items-center justify-between gap-4 border-b border-fintech-border bg-[#0b1b30] px-6 py-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8 backdrop-blur-sm">
+      <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-[#2a2a2a] bg-[#0f0f0f] shadow-soft">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-4 border-b border-[#2a2a2a] bg-[#111111] px-6 py-5">
           <div>
-            <h2 className="text-xl font-semibold text-white">Add Transaction</h2>
+            <h2 className="text-xl font-bold text-white">Add Transaction</h2>
             <p className="text-sm text-fintech-muted">Quickly enter income or expense details.</p>
           </div>
-          <button onClick={onClose} className="text-fintech-muted transition hover:text-white">
-            <X size={24} />
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg text-fintech-muted hover:text-white hover:bg-white/10 transition">
+            <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 px-6 py-6">
           {error && (
-            <div className="rounded-3xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
               {error}
             </div>
           )}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          {/* Type Toggle */}
+          <div className="grid gap-3 sm:grid-cols-2">
             <button
               type="button"
               onClick={() => setType('expense')}
-              className={`rounded-3xl border px-4 py-3 text-sm font-semibold transition ${
+              className={`rounded-xl border px-4 py-3 text-sm font-bold transition ${
                 type === 'expense'
-                  ? 'border-fintech-primary bg-fintech-primary text-black'
-                  : 'border-fintech-border bg-[#091f34] text-fintech-text hover:border-fintech-primary'
+                  ? 'border-fintech-primary bg-fintech-primary text-black shadow-yellow'
+                  : 'border-[#2a2a2a] bg-[#1a1a1a] text-fintech-muted hover:border-fintech-primary/50 hover:text-white'
               }`}
             >
               Expense
@@ -100,10 +102,10 @@ const TransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
             <button
               type="button"
               onClick={() => setType('income')}
-              className={`rounded-3xl border px-4 py-3 text-sm font-semibold transition ${
+              className={`rounded-xl border px-4 py-3 text-sm font-bold transition ${
                 type === 'income'
-                  ? 'border-fintech-primary bg-fintech-primary text-black'
-                  : 'border-fintech-border bg-[#091f34] text-fintech-text hover:border-fintech-primary'
+                  ? 'border-fintech-primary bg-fintech-primary text-black shadow-yellow'
+                  : 'border-[#2a2a2a] bg-[#1a1a1a] text-fintech-muted hover:border-fintech-primary/50 hover:text-white'
               }`}
             >
               Income
@@ -122,7 +124,7 @@ const TransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
                   required
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full rounded-3xl border border-fintech-border bg-[#091a2b] px-12 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
+                  className="w-full rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] px-12 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
                   placeholder="0.00"
                 />
               </div>
@@ -135,8 +137,8 @@ const TransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
                 required
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full rounded-3xl border border-fintech-border bg-[#091a2b] px-4 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
-                placeholder="Type or select a category"
+                className="w-full rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
+                placeholder="Type or select"
               />
               <datalist id="category-options">
                 {(type === 'expense' ? mergedExpenseCategories : mergedIncomeCategories).map((cat) => (
@@ -154,7 +156,7 @@ const TransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full rounded-3xl border border-fintech-border bg-[#091a2b] px-4 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
+                className="w-full rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
               />
             </div>
             <div>
@@ -163,7 +165,7 @@ const TransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-3xl border border-fintech-border bg-[#091a2b] px-4 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
+                className="w-full rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] px-4 py-4 text-fintech-text outline-none transition focus:border-fintech-primary focus:ring-2 focus:ring-fintech-primary/20"
                 placeholder="Payment details"
               />
             </div>
@@ -172,7 +174,7 @@ const TransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-3xl bg-fintech-primary px-6 py-4 text-sm font-semibold text-black transition hover:bg-fintech-primaryDark disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-xl bg-fintech-primary px-6 py-4 text-sm font-bold text-black transition hover:bg-fintech-primaryDark disabled:cursor-not-allowed disabled:opacity-70 shadow-yellow"
           >
             {loading ? 'Saving...' : 'Save transaction'}
           </button>

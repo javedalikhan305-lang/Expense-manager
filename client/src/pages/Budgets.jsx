@@ -84,7 +84,7 @@ const Budgets = () => {
             setFormData({ category: '', limit: '', month: getCurrentMonth() });
             setShowModal(true);
           }}
-          className="bg-fintech-primary hover:bg-gray-200 text-black px-4 py-2 rounded-lg font-bold transition-colors flex items-center gap-2"
+          className="bg-fintech-primary hover:bg-fintech-primaryDark text-black px-4 py-2 rounded-xl font-bold transition-colors flex items-center gap-2 shadow-yellow"
         >
           <Plus size={18} />
           <span>New Budget</span>
@@ -93,22 +93,22 @@ const Budgets = () => {
 
       {/* Add Budget Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-fintech-card border border-gray-800 rounded-2xl p-6 w-full max-w-md mx-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-[#111111] border border-[#2a2a2a] rounded-2xl p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-white">Add New Budget</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white transition-colors">
+              <button onClick={() => setShowModal(false)} className="text-fintech-muted hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10">
                 <X size={20} />
               </button>
             </div>
             <form onSubmit={handleAddBudget} className="space-y-4">
               <div>
-                <label className="block text-gray-400 text-sm mb-1">Category</label>
+                <label className="block text-fintech-muted text-sm mb-1">Category</label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   required
-                  className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-fintech-primary"
+                  className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-fintech-primary focus:border-fintech-primary"
                 >
                   <option value="">Select Category</option>
                   {Object.keys(CATEGORY_COLORS).map(cat => (
@@ -117,7 +117,7 @@ const Budgets = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-gray-400 text-sm mb-1">Budget Limit (₹)</label>
+                <label className="block text-fintech-muted text-sm mb-1">Budget Limit (₹)</label>
                 <input
                   type="number"
                   value={formData.limit}
@@ -125,23 +125,23 @@ const Budgets = () => {
                   required
                   min="1"
                   placeholder="Enter limit amount"
-                  className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-fintech-primary"
+                  className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-fintech-primary focus:border-fintech-primary"
                 />
               </div>
               <div>
-                <label className="block text-gray-400 text-sm mb-1">Month</label>
+                <label className="block text-fintech-muted text-sm mb-1">Month</label>
                 <input
                   type="month"
                   value={formData.month}
                   onChange={(e) => setFormData({ ...formData, month: e.target.value })}
                   required
-                  className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-fintech-primary"
+                  className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-fintech-primary focus:border-fintech-primary"
                 />
               </div>
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-fintech-primary hover:bg-gray-200 text-black font-bold py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                className="w-full bg-fintech-primary hover:bg-fintech-primaryDark text-black font-bold py-2.5 rounded-xl transition-colors disabled:opacity-50 shadow-yellow"
               >
                 {submitting ? 'Adding...' : 'Add Budget'}
               </button>
@@ -168,7 +168,7 @@ const Budgets = () => {
             const color = CATEGORY_COLORS[budget.category] || 'bg-gray-500';
 
             return (
-              <div key={budget._id} className="bg-fintech-card rounded-2xl border border-gray-800 p-6 flex flex-col justify-between">
+              <div key={budget._id} className="bg-[#111111] rounded-2xl border border-[#2a2a2a] p-6 flex flex-col justify-between hover:border-fintech-primary/30 transition-all duration-300">
                 <div>
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-2">
@@ -213,7 +213,7 @@ const Budgets = () => {
                     </div>
                   </div>
 
-                  <div className="w-full bg-gray-900 rounded-full h-2 mt-4 overflow-hidden">
+                  <div className="w-full bg-[#2a2a2a] rounded-full h-2 mt-4 overflow-hidden">
                     <div
                       className={`h-2 rounded-full transition-all duration-500 ${isOver ? 'bg-fintech-danger' : isNear ? 'bg-fintech-warning' : color}`}
                       style={{ width: `${progress}%` }}

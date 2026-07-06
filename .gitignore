@@ -1,5 +1,15 @@
-node_modules 
-client/node_modules 
-server/node_modules 
+node_modules
+client/node_modules
+server/node_modules
+
+# Environment files - NEVER push these
+.env
 client/.env
+server/.env
+
+# Build output
+client/dist
+
+# OS files
 .DS_Store
+Thumbs.db

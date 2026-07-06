@@ -1,41 +1,43 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const geminiApiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_APIKEY;
-if (!geminiApiKey) {
-  throw new Error('Missing Gemini API key. Set GEMINI_API_KEY, API_KEY, or GOOGLE_API_KEY.');
-}
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
-const genAI = new GoogleGenerativeAI(geminiApiKey);
-
+// ── GET AI INSIGHTS ──────────────────────────────────────────
 export const getInsights = async (req, res) => {
   const { expenses } = req.body;
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const prompt = `Analyze these expenses and provide financial insights, including spending patterns, budgeting advice, and potential savings. Respond in a clean, readable text format:\n\n${JSON.stringify(expenses)}`;
-    
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        {
+          role: 'user',
+          content: `Analyze these expenses and provide financial insights, including spending patterns, budgeting advice, and potential savings. Respond in a clean, readable text format:\n\n${JSON.stringify(expenses)}`,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 1024,
+    });
+
+    const text = completion.choices[0]?.message?.content || 'No insights generated.';
     res.json({ insights: text });
   } catch (error) {
+    console.error('getInsights error:', error);
     res.status(500).json({ message: 'Error generating insights', error: error.message });
   }
 };
 
+// ── SCAN RECEIPT (Vision) ─────────────────────────────────────
 export const scanReceipt = async (req, res) => {
   const { imageUrl, mimeType = 'image/jpeg' } = req.body;
   try {
-    // If the image is provided as a Cloudinary URL, we would normally download it 
-    // and pass it as base64 to Gemini. For simplicity or if base64 is provided directly:
-    // Let's assume the frontend sends the base64 image data or we fetch the URL.
-    
     let base64Data = req.body.base64Data;
-    
+
+    // Fetch from URL if base64 not provided
     if (!base64Data && imageUrl) {
-      // Fetch from URL
       const response = await fetch(imageUrl);
       const arrayBuffer = await response.arrayBuffer();
       base64Data = Buffer.from(arrayBuffer).toString('base64');
@@ -45,31 +47,41 @@ export const scanReceipt = async (req, res) => {
       return res.status(400).json({ message: 'No image data provided' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
-    
-    const prompt = `Analyze this receipt image and extract the following details to categorize the expense.
+    const imageDataUrl = `data:${mimeType};base64,${base64Data}`;
+
+    const completion = await groq.chat.completions.create({
+      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: `Analyze this receipt image and extract the following details to categorize the expense.
 Return a strictly valid JSON object with the following keys:
 - amount (number)
 - category (string, best fit from: Food, Transport, Utilities, Entertainment, Health, Shopping, Other)
 - description (string, merchant name or brief description)
 - date (string, YYYY-MM-DD format if found, otherwise omit)
 
-Only return the JSON. No markdown or other text.`;
-
-    const imageParts = [
-      {
-        inlineData: {
-          data: base64Data,
-          mimeType: mimeType,
+Only return the JSON. No markdown or other text.`,
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: imageDataUrl,
+              },
+            },
+          ],
         },
-      },
-    ];
+      ],
+      temperature: 0.2,
+      max_tokens: 512,
+    });
 
-    const result = await model.generateContent([prompt, ...imageParts]);
-    const response = await result.response;
-    let text = await response.text();
+    let text = completion.choices[0]?.message?.content || '';
 
-    // Clean up potential markdown formatting from Gemini response
+    // Clean up potential markdown formatting
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
     const parseJson = (jsonString) => {
@@ -82,7 +94,6 @@ Only return the JSON. No markdown or other text.`;
     };
 
     const extractedData = parseJson(text);
-
     res.json(extractedData);
   } catch (error) {
     console.error('scanReceipt error:', error);

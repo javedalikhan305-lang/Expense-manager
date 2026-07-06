@@ -11,3 +11,9 @@
     @apply antialiased;
   }
 }
+
+@layer utilities {
+  .shadow-yellow {
+    box-shadow: 0 0 20px rgba(245, 197, 24, 0.2);
+  }
+}

@@ -8,20 +8,22 @@ export default {
     extend: {
       colors: {
         fintech: {
-          dark: '#071822',
-          card: '#0f192a',
-          primary: '#7dd3fc',
-          primaryDark: '#38bdf8',
+          dark: '#0a0a0a',
+          card: '#111111',
+          primary: '#f5c518',
+          primaryDark: '#e0b000',
           success: '#34d399',
           danger: '#fb7185',
-          muted: '#94a3b8',
-          border: '#1e2e44',
-          text: '#e2e8f0',
+          warning: '#f5c518',
+          muted: '#888888',
+          border: '#2a2a2a',
+          text: '#e8e8e8',
           white: '#ffffff',
         }
       },
       boxShadow: {
-        soft: '0 18px 45px rgba(10, 25, 47, 0.25)',
+        soft: '0 18px 45px rgba(0, 0, 0, 0.5)',
+        yellow: '0 0 30px rgba(245, 197, 24, 0.15)',
       }
     },
   },
